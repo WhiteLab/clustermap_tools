@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """Clustermap generator.
 
 Usage: 
@@ -15,8 +15,6 @@ Options:
                      seperate heatmaps clustered based on data. Ids should be in rows, with header for each row in first column 
 """
 import math
-import pdb
-import re
 import sys
 
 import matplotlib as mpl
@@ -134,7 +132,8 @@ for line in tbl:
         exit(1)
     k += 1
 data = data.astype(np.float)
-# check if optional log transform value set.  must give min to replace 0, will output lowest value in case supplied min is too small
+# check if optional log transform value set.  must give min to replace 0
+# , will output lowest value in case supplied min is too small
 try:
     if norm != None:
         sys.stderr.write('Log transforming values\n')
@@ -168,6 +167,15 @@ if args['-c'] != None:
     res = sns.clustermap(df, method=center, cmap=usermap, metric=cluster, figsize=(c, r), rasterized=True)
 else:
     res = sns.clustermap(df, method=center, cmap='Blues', metric=cluster, figsize=(c, r), rasterized=True)
+ax = res.ax_heatmap
+xaxis = []
+for ind in res.dendrogram_col.reordered_ind:
+    xaxis.append(Cols[ind])
+ax.set_xticklabels(xaxis, rotation=90)
+yaxis = []
+for ind in res.dendrogram_row.reordered_ind:
+    yaxis.append(Rows[ind])
+ax.set_yticklabels(yaxis, rotation=0)
 
 res.savefig(out)
 # plt.show(res)
