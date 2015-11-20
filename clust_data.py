@@ -175,6 +175,7 @@ ax.set_xticklabels(xaxis, rotation=90)
 yaxis = []
 for ind in res.dendrogram_row.reordered_ind:
     yaxis.append(Rows[ind])
+yaxis.reverse()
 ax.set_yticklabels(yaxis, rotation=0)
 
 res.savefig(out)
