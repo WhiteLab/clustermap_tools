@@ -2,18 +2,20 @@
 """Filters table for minimum row instances.
 
 Usage:
-    min_sample_ct.py (-t TABLE) (-n NUMBER)
+    min_sample_ct.py (-t TABLE) (-n VALUE) (-s SAMPLE)
 
 Options:
     -h, --help
     -t TABLE         table name
-    -o NUMBER        min number samples needed
+    -n NUMBER        min value needed
+    -s SAMPLE       min number samples needed
 """
 from docopt import docopt
 
 args = docopt(__doc__)
 tbl = open(args['-t'], 'r')
-min_ct = int(args['-n'])
+min_samp = int(args['-s'])
+min_val = int(args['-n'])
 
 head = next(tbl)
 head = head.rstrip('\n')
@@ -24,8 +26,8 @@ for line in tbl:
     data = line.split('\t')
     ct = 0
     for i in xrange(1, len(data), 1):
-        if float(data[i]) > 0:
+        if float(data[i]) >= min_val:
             ct += 1
-    if ct >= min_ct:
+    if ct >= min_samp:
         print line
 tbl.close()
