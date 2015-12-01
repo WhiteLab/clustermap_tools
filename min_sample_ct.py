@@ -16,6 +16,7 @@ tbl = open(args['-t'], 'r')
 min_ct = int(args['-n'])
 
 head = next(tbl)
+head = head.rstrip('\n')
 print head
 
 for line in tbl:
