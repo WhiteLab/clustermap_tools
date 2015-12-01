@@ -57,7 +57,7 @@ for tbl in tlist:
     flist.append(tbl)
     if hflag:
         head = next(fh)
-    new_tbl[tbl] = new_tbl[tbl] = {}
+    new_tbl[tbl] = {}
     for line in fh:
         line = line.rstrip('\n')
         if len(line) < 1:
