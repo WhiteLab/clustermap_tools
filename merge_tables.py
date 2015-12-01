@@ -76,9 +76,9 @@ for tbl in tlist:
         new_tbl[tbl][row] = data[col]
     fh.close()
 tlist.close()
-sys.stdout.write('Sample/variant' + '\t' + '\t'.join(flist) + '\n')
 flist.sort()
 vlist.sort()
+sys.stdout.write('Sample/variant' + '\t' + '\t'.join(flist) + '\n')
 for variant in vlist:
     sys.stdout.write(variant)
     for samp in flist:
