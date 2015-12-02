@@ -12,7 +12,8 @@ Options:
     -z ZERO          zero value to use when log transforming
     -c CMAP          hex colormap to import, otherwise default used
     -d DESCRIPTIVE   add second table with descriptive data to create
-                     seperate heatmaps clustered based on data. Ids should be in rows, with header for each row in first column 
+                     separate heatmaps clustered based on data. Ids should be in rows,
+                     with header for each row in first column
 """
 import math
 import sys
@@ -24,6 +25,7 @@ import seaborn as sns
 from docopt import docopt
 from matplotlib.colors import LinearSegmentedColormap
 from pandas import DataFrame
+import pdb
 
 args = docopt(__doc__)
 tbl = open(args['-t'], 'r')
@@ -53,7 +55,7 @@ def transform(mat, norm, zero):
 def isint(x):
     try:
         a = float(x)
-        b = int(a)
+        int(a)
     except ValueError:
         return False
     else:
@@ -65,9 +67,11 @@ def annotate(ann, ccols, ocols, clust, c):
     head = next(to_add)
     head = head.rstrip('\n')
     bids = head.split('\t')
+    # SHOULD HAVE ROW HEADERS
     Cols = bids[1:]
-    maps = ('Greys', 'Reds', 'Blues', 'Greens')
+    maps = ('Reds', 'Reds', 'Greys', 'Greens')
     k = 0
+    annot = []
     for line in to_add:
         line = line.rstrip('\n')
         data = line.split('\t')
@@ -75,10 +79,10 @@ def annotate(ann, ccols, ocols, clust, c):
         rmap = []
         newCols = []
         # reorg data to match cluster
+
         for i in ccols:
             rmap.append(to_map[Cols.index(ocols[i])])
-            newCols.append(Cols[i])
-        # pdb.set_trace()
+            newCols.append(ocols[i])
         rmap = np.asarray(rmap)
         Rows = []
         Rows.append(data[0])
@@ -97,16 +101,20 @@ def annotate(ann, ccols, ocols, clust, c):
                     j += 1
                 rmap[i] = qdict[rmap[i]]
             rmap = rmap.astype(np.float)
-        df = DataFrame(rmap, index=newCols, columns=Rows)
+        df = DataFrame(rmap, index=ocols, columns=Rows)
 
+        df = df.transpose()
         new, cur = plt.subplots()
         cur = sns.heatmap(df, cmap=maps[k], rasterized=True)
-        new.set_figheight(c)
-        new.set_figwidth(2)
-        new.set_dpi(600)
-        new.savefig('test' + str(k) + '.pdf')
-        k = k + 1
 
+        new.set_figheight(2)
+        new.set_figwidth(c)
+        new.set_dpi(600)
+        cur.set_xticklabels(newCols, rotation=90)
+        new.savefig('test' + str(k) + '.pdf')
+        annot.append(new)
+        k += 1
+    return annot
 
 head = next(tbl)
 head = head.rstrip('\n')
@@ -178,11 +186,11 @@ for ind in res.dendrogram_row.reordered_ind:
 yaxis.reverse()
 ax.set_yticklabels(yaxis, rotation=0)
 
-res.savefig(out)
 # plt.show(res)
 # create second table for annotation - for now will be drawn as a second table to concatenate in post
 if args['-d'] != None:
     sys.stderr.write('Annotation table given, creating descriptive heatmaps based on clustering\n')
-    annotate(args['-d'], res.dendrogram_col.reordered_ind, df.columns, res, c)
+    an_maps = annotate(args['-d'], res.dendrogram_col.reordered_ind, df.columns, res, c)
+res.savefig(out)
 
 sys.stderr.write('Fin\n')
