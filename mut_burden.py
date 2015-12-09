@@ -37,7 +37,18 @@ for line in fh:
     if gene not in genes:
         genes[gene] = {}
     for i in xrange(1, len(data), 1):
-        if int(data[i]) > 0:
+        test = data[i]
+        try:
+            test = float(test)
+        # in case written in percent format
+        except:
+            try:
+                if test[-1] == '%':
+                    test = float(test.rstrip('%'))
+            except:
+                sys.stderr.write('No discernible number detected.  Check table and try again. Offending value' + data[i] + '\n')
+
+        if test > 0:
             if hlist[i] not in genes[gene]:
                 genes[gene][hlist[i]] = 0
             genes[gene][hlist[i]] += 1

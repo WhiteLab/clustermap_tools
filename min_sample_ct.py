@@ -10,6 +10,7 @@ Options:
     -n NUMBER        min value needed
     -s SAMPLE       min number samples needed
 """
+import sys
 from docopt import docopt
 
 args = docopt(__doc__)
@@ -26,7 +27,18 @@ for line in tbl:
     data = line.split('\t')
     ct = 0
     for i in xrange(1, len(data), 1):
-        if float(data[i]) >= min_val:
+        test = data[i]
+        try:
+            test = float(test)
+        # in case written in percent format
+        except:
+            try:
+                if test[-1] == '%':
+                    test = float(test.rstrip('%'))
+            except:
+                sys.stderr.write('No discernible number detected.  Check table and try again. Offending value' + data[i] + '\n')
+
+        if data >= min_val:
             ct += 1
     if ct >= min_samp:
         print line
