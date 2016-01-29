@@ -29,14 +29,14 @@ tflag = int(args['<tflag>'])
 
 sflag = 1
 suffix = ''
-if '-s' in args:
+if args['-s'] is not None:
     suffix = args['-s']
 else:
     sys.stderr.write('No suffix given.  Using file names as headers\n')
     sflag = 0
 alist = {}
 aflag = 0
-if '-a' in args:
+if args['-a'] is not None:
     aflag = 1
     list_h = open(args['-a'], 'r')
     for line in list_h:

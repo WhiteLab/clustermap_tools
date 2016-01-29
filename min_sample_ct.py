@@ -38,7 +38,7 @@ for line in tbl:
             except:
                 sys.stderr.write('No discernible number detected.  Check table and try again. Offending value' + data[i] + '\n')
 
-        if data >= min_val:
+        if test >= min_val:
             ct += 1
     if ct >= min_samp:
         print line
