@@ -157,8 +157,9 @@ sys.stderr.write('Clustering and drawing figures\n')
 (r, c) = data.shape
 if r > 6:
     r = math.ceil(r / 6)
-if c > 6:
-    c = math.ceil(c / 6)
+#if c > 6:
+#    c = math.ceil(c / 6)
+
 sys.stderr.write('Dimensions set as width ' + str(c) + ' height ' + str(r) + '\n')
 # if custom colormap supplied, use it
 if args['-c'] != None:
@@ -174,7 +175,7 @@ if args['-c'] != None:
     usermap = mpl.colors.ListedColormap(ccmap)
     res = sns.clustermap(df, method=center, cmap=usermap, metric=cluster, figsize=(c, r), rasterized=True)
 else:
-    res = sns.clustermap(df, method=center, cmap='Blues', metric=cluster, figsize=(c, r), rasterized=True)
+    res = sns.clustermap(df, method=center, cmap='Purples', metric=cluster, figsize=(c, r), rasterized=True)
 ax = res.ax_heatmap
 xaxis = []
 for ind in res.dendrogram_col.reordered_ind:

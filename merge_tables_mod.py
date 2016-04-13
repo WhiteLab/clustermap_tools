@@ -71,13 +71,15 @@ for tbl in tlist:
             continue
         # pdb.set_trace()
         # added min filters for read count covering tumor as well as percentage
-        if int(data[9]) + int(data[8]) < min_ct or float(data[10][:-1]) < min_pct:
+        if (int(data[9]) + int(data[8]) >= min_ct or float(data[10][:-1]) >= min_pct) and float(data[11]) >= 2:
+            
+            var = data[3] + '-' + data[4]
+            row = '_'.join([data[13], data[0], data[1], var])
+            if row not in temp:
+                temp[row] = 1
+                vlist.append(row)
+        else:
             continue
-        var = data[3] + '-' + data[4]
-        row = '_'.join([data[13], data[0], data[1], var])
-        if row not in temp:
-            temp[row] = 1
-            vlist.append(row)
         new_tbl[tbl][row] = data[col]
     fh.close()
 tlist.close()
