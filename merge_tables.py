@@ -15,7 +15,7 @@ Options:
 -h
 -s SUFFIX  if given, will omit from column name.  otherwise file name used as column header
 -a ACCEPT  if given, a list of acceptable effects - i.e. NON_SYNONYMOUS
--tn TN RATIO if given, can specify min t/n ratio
+-r TN RATIO if given, can specify min t/n ratio
 -f VAF     if given, can speciy minimum variant allele freq
 -c COVERAGE if given, require min coverage of position before accepting
 """
@@ -32,8 +32,8 @@ tflag = int(args['<tflag>'])
 # setting up possible parameters and column posotions for additional filtering when required
 tn = 0.0
 tn_col = 11
-if args['-tn']:
-    tn = float(args['-tn'])
+if args['-r']:
+    tn = float(args['-r'])
 vaf = 0.0
 vcol = 10
 if args['-f']:
