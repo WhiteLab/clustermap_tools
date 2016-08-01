@@ -156,7 +156,7 @@ sys.stderr.write('Clustering and drawing figures\n')
 # set shape so that text labels are readable
 (r, c) = data.shape
 if r > 6:
-    r = math.ceil(r / 6)
+    r = math.ceil(r / 2)
 #if c > 6:
 #    c = math.ceil(c / 6)
 
