@@ -157,6 +157,8 @@ sys.stderr.write('Clustering and drawing figures\n')
 (r, c) = data.shape
 if r > 6:
     r = math.ceil(r / 6)
+if r > 1000:
+    r = math.ceil(r / 10)
 #if c > 6:
 #    c = math.ceil(c / 6)
 

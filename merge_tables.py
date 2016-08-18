@@ -18,6 +18,7 @@ Options:
 -r TN RATIO if given, can specify min t/n ratio
 -f VAF     if given, can speciy minimum variant allele freq
 -c COVERAGE if given, require min coverage of position before accepting
+-m MIN      if givien, min number of samples a variant must be in before accepting
 """
 import os
 import sys
@@ -60,12 +61,18 @@ if args['-a'] is not None:
     for line in list_h:
         line = line.rstrip('\n')
         alist[line] = 1
+# min sample occurance flag
+mflag = 0
+if args['-m'] is not None:
+    mflag = int(args['-m'])
 
 new_tbl = {}
 flist = []
 # chr1	2488217	GTTxTGA	C	A	149	0	0.00%	99	5	4.81%	10000.00	NA	TNFRSF14	INTRON	CODING			283	KEEP	ON
 temp = {}
 vlist = []
+# count number of times variant seen
+vct = {}
 for tbl in tlist:
     sys.stderr.write('Processing table ' + tbl)
     tbl = tbl.rstrip('\n')
@@ -99,7 +106,13 @@ for tbl in tlist:
                 continue
         # pdb.set_trace()
         var = data[3] + '-' + data[4]
+
         row = '_'.join([data[13], data[0], data[1], var])
+        if mflag > 0:
+            if var not in vct:
+                vct[row] = 1
+            else:
+                vct[row] += 1
         if row not in temp:
             temp[row] = 1
             vlist.append(row)
@@ -110,6 +123,8 @@ flist.sort()
 vlist.sort()
 sys.stdout.write('Sample/variant' + '\t' + '\t'.join(flist) + '\n')
 for variant in vlist:
+    if mflag > 0 and vct[variant] < mflag:
+        continue
     sys.stdout.write(variant)
     for samp in flist:
         if variant in new_tbl[samp]:
