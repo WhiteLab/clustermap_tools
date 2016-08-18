@@ -22,7 +22,7 @@ Options:
 """
 import os
 import sys
-
+import pdb
 from docopt import docopt
 
 args = docopt(__doc__)
@@ -108,8 +108,9 @@ for tbl in tlist:
         var = data[3] + '-' + data[4]
 
         row = '_'.join([data[13], data[0], data[1], var])
+        #pdb.set_trace()
         if mflag > 0:
-            if var not in vct:
+            if row not in vct:
                 vct[row] = 1
             else:
                 vct[row] += 1
