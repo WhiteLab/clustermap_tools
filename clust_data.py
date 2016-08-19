@@ -155,7 +155,7 @@ mpl.rcParams['font.size'] = '8'
 sys.stderr.write('Clustering and drawing figures\n')
 # set shape so that text labels are readable
 (r, c) = data.shape
-if r > 6:
+if r > 36:
     r = math.ceil(r / 6)
 if r > 1000:
     r = math.ceil(r / 10)

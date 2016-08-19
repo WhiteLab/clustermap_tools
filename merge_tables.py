@@ -1,29 +1,31 @@
 #!/usr/bin/env python
-"""
-Merges tables based on a single column, column denoted array-style. Designed for variant output - will merge gene,
+"""Merges tables based on a single column, column denoted array-style. Designed for variant output - will merge gene,
 position, and base change as name for row
 
 Usage: ./merge_tables.py (<list> <col> <hflag> <tflag>) [options]
 
 Arguments:
-<list>   list of tables
-<col>    index of column to merge, array style
-<hflag>  1 if tables have header, 0 if not
-<tflag>  1 if showing on-target only
+    <list>   list of tables
+    <col>    index of column to merge, array style
+    <hflag>  1 if tables have header, 0 if not
+    <tflag>  1 if showing on-target only
 
 Options:
--h
--s SUFFIX  if given, will omit from column name.  otherwise file name used as column header
--a ACCEPT  if given, a list of acceptable effects - i.e. NON_SYNONYMOUS
--r TN RATIO if given, can specify min t/n ratio
--f VAF     if given, can speciy minimum variant allele freq
--c COVERAGE if given, require min coverage of position before accepting
--m MIN      if givien, min number of samples a variant must be in before accepting
+    -h --help
+    -s SUFFIX       if given, will omit from column name.  otherwise file name used as column header
+    -a ACCEPT       if given, a list of acceptable effects - i.e. NON_SYNONYMOUS
+    -r TN RATIO     if given, can specify min t/n ratio
+    -f VAF          if given, can specify minimum variant allele freq
+    -c COVERAGE     if given, require min coverage of position before accepting
+    -m MIN          if given, min number of samples a variant must be in before accepting
+    -t TUMOR        if given, special tumor sample designation to allow for different vaf acceptance criteria
+    -v TVAF         used with -t to set separate vaf acceptance for tumor sample
+
 """
+from docopt import docopt
 import os
 import sys
 import pdb
-from docopt import docopt
 
 args = docopt(__doc__)
 tlist = open(args['<list>'])
@@ -33,29 +35,29 @@ tflag = int(args['<tflag>'])
 # setting up possible parameters and column posotions for additional filtering when required
 tn = 0.0
 tn_col = 11
-if args['-r']:
+if '-r' in args and args['-r'] is not None:
     tn = float(args['-r'])
 vaf = 0.0
 vcol = 10
-if args['-f']:
+if '-f' in args and args['-f'] is not None:
     vaf = float(args['-f'])
 
 cov = 0
 ncol = 5
 tcol = 8
-if args['-c']:
+if '-c' in args and args['-c'] is not None:
     cov = int(args['-c'])
 
 sflag = 1
 suffix = ''
-if args['-s'] is not None:
+if '-s' in args and args['-s'] is not None:
     suffix = args['-s']
 else:
     sys.stderr.write('No suffix given.  Using file names as headers\n')
     sflag = 0
 alist = {}
 aflag = 0
-if args['-a'] is not None:
+if '-a' in args and args['-a'] is not None:
     aflag = 1
     list_h = open(args['-a'], 'r')
     for line in list_h:
@@ -63,7 +65,7 @@ if args['-a'] is not None:
         alist[line] = 1
 # min sample occurance flag
 mflag = 0
-if args['-m'] is not None:
+if '-m' in args and args['-m'] is not None:
     mflag = int(args['-m'])
 
 new_tbl = {}
@@ -97,8 +99,12 @@ for tbl in tlist:
             continue
         if vaf > 0:
             check = float(data[vcol].rstrip('%'))
-            if check < vaf:
-                continue
+            if '-t' in args and args['-t'] is not None and args['-t'] == tbl:
+                if check < float(args['-v']):
+                    continue
+            else:
+                if check < vaf:
+                    continue
         if cov > 0:
             n_cov = int(data[ncol]) + int(data[(ncol+1)])
             t_cov = int(data[tcol]) + int(data[(tcol+1)])
