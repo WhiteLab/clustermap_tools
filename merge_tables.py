@@ -75,6 +75,11 @@ temp = {}
 vlist = []
 # count number of times variant seen
 vct = {}
+tum_list = {}
+if '-t' in args and args['-t'] is not None:
+    tum_temp = args['-t'].split(',')
+    for tval in tum_temp:
+        tum_list[tval] = 1
 for tbl in tlist:
     sys.stderr.write('Processing table ' + tbl)
     tbl = tbl.rstrip('\n')
@@ -99,7 +104,7 @@ for tbl in tlist:
             continue
         if vaf > 0:
             check = float(data[vcol].rstrip('%'))
-            if '-t' in args and args['-t'] is not None and args['-t'] == tbl:
+            if '-t' in args and args['-t'] is not None and tbl in tum_list:
                 if check < float(args['-v']):
                     continue
             else:
