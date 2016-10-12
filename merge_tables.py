@@ -38,7 +38,7 @@ tn_col = 11
 if '-r' in args and args['-r'] is not None:
     tn = float(args['-r'])
 vaf = 0.0
-vcol = 10
+vcol = 6
 if '-f' in args and args['-f'] is not None:
     vaf = float(args['-f'])
 
@@ -49,13 +49,13 @@ ncol = 5
 # alt count col
 tcol = 8
 # effect column - non-syn, etc
-acol = 14
+acol = 8
 # gene name col
-gcol = 13
+gcol =0
 # chrom col
-chr_col = 0
+chr_col = 1
 # pos col
-pos_col = 1
+pos_col = 2
 # reference base col
 ref_col = 3
 #allele base col
