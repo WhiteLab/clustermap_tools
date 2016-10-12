@@ -150,7 +150,7 @@ except NameError:
     sys.stderr.write('No log transform requested, moving along\n')
 # create pandas dataframe for clustering
 df = DataFrame(data, index=Rows, columns=Cols)
-mpl.rcParams['font.family'] = 'cmss10'
+mpl.rcParams['font.family'] = 'Helvetica'
 mpl.rcParams['font.size'] = '8'
 sys.stderr.write('Clustering and drawing figures\n')
 # set shape so that text labels are readable

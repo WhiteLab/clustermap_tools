@@ -43,8 +43,24 @@ if '-f' in args and args['-f'] is not None:
     vaf = float(args['-f'])
 
 cov = 0
+## set up some column variables - should be replaced with a json file
+# normal count col
 ncol = 5
+# alt count col
 tcol = 8
+# effect column - non-syn, etc
+acol = 14
+# gene name col
+gcol = 13
+# chrom col
+chr_col = 0
+# pos col
+pos_col = 1
+# reference base col
+ref_col = 3
+#allele base col
+alt_col = 4
+
 if '-c' in args and args['-c'] is not None:
     cov = int(args['-c'])
 
@@ -98,7 +114,7 @@ for tbl in tlist:
         data = line.split('\t')
         if tflag and data[-1] == 'OFF':
             continue
-        if aflag and data[14] not in alist:
+        if aflag and data[acol] not in alist:
             continue
         if tn > 0 and data[tn_col] < tn:
             continue
@@ -116,9 +132,9 @@ for tbl in tlist:
             if n_cov < cov or t_cov < cov:
                 continue
         # pdb.set_trace()
-        var = data[3] + '-' + data[4]
+        var = data[ref_col] + '-' + data[alt_col]
 
-        row = '_'.join([data[13], data[0], data[1], var])
+        row = '_'.join([data[gcol], data[chr_col], data[pos_col], var])
         #pdb.set_trace()
         if mflag > 0:
             if row not in vct:
