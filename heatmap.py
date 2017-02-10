@@ -30,6 +30,7 @@ args = docopt(__doc__)
 tbl = open(args['-t'], 'r')
 out = args['-o']
 
+(norm, zero) = (None, None)
 if '-l' in args:
     norm, zero = (args['-l'], args['-z'])
 minval = 0.00001
@@ -131,28 +132,29 @@ for line in tbl:
         exit(1)
     k += 1
 data = data.astype(np.float)
-# check if optional log transform value set.  must give min to replace 0, will output lowest value in case supplied min is too small
+# check if optional log transform value set.  must give min to replace 0, will output lowest value in case supplied min
+#  is too small
 try:
-    if norm != None:
+    if norm is not None:
         sys.stderr.write('Log transforming values\n')
         data = transform(data, norm, zero)
 except NameError:
     sys.stderr.write('No log transform requested, moving along\n')
 # create pandas dataframe for clustering
 df = DataFrame(data, index=Rows, columns=Cols)
-mpl.rcParams['font.family'] = 'cmss10'
+mpl.rcParams['pdf.fonttype'] = 42
 mpl.rcParams['font.size'] = '8'
 sys.stderr.write('Drawing figures\n')
 # set shape so that text labels are readable
 (r, c) = data.shape
-if r > 6:
+if r > 36:
     r = math.ceil(r / 6)
-if c > 6:
-    c = math.ceil(c / 6)
+if r > 1000:
+    r = math.ceil(r / 10)
 sys.stderr.write('Dimensions set as width ' + str(c) + ' height ' + str(r) + '\n')
 # if custom colormap supplied, use it
 res, cur = plt.subplots()
-if args['-c'] != None:
+if args['-c'] is not None:
     ccmap = []
     cval = open(args['-c'], 'r')
 
@@ -165,11 +167,11 @@ if args['-c'] != None:
     cur = sns.heatmap(df, cmap=usermap, rasterized=True)
 
 else:
-    cur = sns.heatmap(df, cmap='Blues', rasterized=True)
-res.set_figheight(r + 1)
-res.set_figwidth(c + 4)
-res.set_dpi(600)
-res.savefig(out)
+    cur = sns.heatmap(df, cmap='Purples', rasterized=True)
+#ax = res.ax_heatmap
+plt.xticks(rotation=270)
+plt.yticks(rotation=0)
+res.savefig(out, bbox_inches='tight')
 # plt.show(res)
 # create second table for annotation - for now will be drawn as a second table to concatenate in post
 if args['-d'] != None:

@@ -33,6 +33,8 @@ out = args['-o']
 center = 'weighted'
 cluster = 'euclidean'
 
+
+(norm, zero) = (None, None)
 if '-l' in args:
     norm, zero = (args['-l'], args['-z'])
 minval = 0.00001
